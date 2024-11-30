@@ -2006,6 +2006,7 @@
 ◆ session-desktop : Onion routing based messenger.
 ◆ setcolors : Another way to set colors in Linux shells.
 ◆ sfbrename : Bulk file renamer.
+◆ sfp : This utility is designed to allow you to apply skins to the modern Steam client.
 ◆ sfrt-attendance : The attendance tracking program for robotics.
 ◆ sf-tube : Watch and download videos without ads.
 ◆ shadowsocks : Shadowsocks GUI client.
@@ -2352,7 +2353,7 @@
 ◆ uivonim : Fork of the Veonim Neovim GUI.
 ◆ ultragrid : UltraGrid low-latency audio/video network transmission system.
 ◆ ultrascreen : Share your screens with friends.
-◆ ums : Unofficial AppImage for Universal Media Server. A DLNA, UPnP and HTTP(S) Media Server.
+◆ ums : Universal Media Server. A DLNA, UPnP and HTTP(S) Media Server.
 ◆ uncov : A tool that collects and processes code coverage reports.
 ◆ unetbootin : Install Linux/BSD distributions to a partition or USB drive.
 ◆ ungoogled-chromium : Chromium Web Browser without Google services.
@@ -2485,6 +2486,7 @@
 ◆ window-pet : Pet overlay app that lets you have adorable companion such as pets, anime characters on your screen.
 ◆ windows2usb : Flash Drive burning utility, MBR/GPT, BIOS/UEFI, FAT32/NTFS.
 ◆ windows95 : Unofficial. Windows 95 in Electron.
+◆ windsurf : Codeium. Tomorrow's Editor, Today. Built to keep you in flow state with instant, invaluable AI developer assistance. The first agentic IDE.
 ◆ wine32-deploy : Tool for creating AppImages for 32-bit Microsoft Windows apps.
 ◆ wine-devel : Unofficial. Compatibility layer to run x86_64 Windows programs, Dev Edition.
 ◆ wine-stable : Unofficial. Compatibility layer to run x86_64 Windows programs, Stable.
@@ -2526,6 +2528,7 @@
 ◆ xchat : Chat with other people using Internet Relay Chat.
 ◆ xclicker : Fast gui autoclicker for x11 linux desktops.
 ◆ xcloud-desktop : An unoffical desktop app for the XCloud web beta.
+◆ xdelta3-cross-gui : A cross-platform GUI for creating xDelta3 patches.
 ◆ xde : The Expo Development Environment.
 ◆ xdg-ninja : Script that checks your $HOME for unwanted files and directories.
 ◆ xelfviewer : A multiplatform ELF file viewer/editor.

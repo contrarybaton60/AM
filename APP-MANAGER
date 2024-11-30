@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-AMVERSION="9.1.2-1"
+AMVERSION="9.1.3"
 
 # Determine main repository and branch
 AMREPO="https://raw.githubusercontent.com/ivan-hc/AM/main"
@@ -31,9 +31,9 @@ SCRIPTDIR="$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME")"
 export SCRIPTDIR
 
 # Colors
-RED='\033[0;31m' 
-Gold='\033[0;33m' 
-Green='\033[0;32m' 
+RED='\033[0;31m'
+Gold='\033[0;33m'
+Green='\033[0;32m'
 LightBlue='\033[1;34m'
 DIVIDING_LINE="-----------------------------------------------------------------------------"
 
@@ -67,7 +67,7 @@ if you wish to later change the location, first remove all the programs and then
 
 function _appman_check() {
 	if [ ! -f "$APPMANCONFIG"/appman-config ]; then
-		echo "$DIVIDING_LINE" 
+		echo "$DIVIDING_LINE"
 		[ "$AMCLI" = am ] && echo ">>> Configure AppMan" || echo ">>> Thank you for choosing AppMan!"
 		echo "$DIVIDING_LINE"
 		echo "$APPMAN_SETUP_MSG" | fold -sw 77 | sed 's/^/ /g'
@@ -81,11 +81,11 @@ function _appman_check() {
 		if echo "$location" | grep "$BINDIR" >/dev/null 2>&1; then
 			echo "$DIVIDING_LINE"
 			echo " 💀 ERROR, you can't install applications in \"$BINDIR\""
-			echo " $BINDIR is normally used for executables, Please choose a different path and retry!" 
+			echo " $BINDIR is normally used for executables, Please choose a different path and retry!"
 			echo "$DIVIDING_LINE"
 			exit  1
 		elif ! mkdir -p "$location" 2>/dev/null || [ ! -w "$location" ]; then
-			echo " 💀 ERROR: You don't have write access to $location or it is invalid" 
+			echo " 💀 ERROR: You don't have write access to $location or it is invalid"
 			exit 1
 		fi
 		mkdir -p "$APPMANCONFIG" || exit 1
@@ -360,10 +360,14 @@ function _am_newrepo_check() {
 
 _am_newrepo_check "$@"
 
-# 3RD PARTY SOURCES -- TOOLPACK
+# 3RD PARTY SOURCES
+appbundle_repo="https://github.com/xplshn/AppBundleHUB"
+appbundle_readme="https://raw.githubusercontent.com/xplshn/dbin-metadata/refs/heads/master/misc/cmd/AM-support/AM.txt"
+
 toolpack_repo="https://github.com/Azathothas/Toolpacks"
 toolpack_readme="https://bin.pkgforge.dev/${ARCH}/AM.txt"
-export toolpack_name="1" toolpack_description="2" toolpack_site="3" toolpack_dl="4" toolpack_ver="5"
+
+export awk_name="1" awk_description="2" awk_site="3" awk_dl="4" awk_ver="5" # Numbers to use in "awk" to determine columns
 
 ################################################################################
 #				UTILITIES
@@ -380,6 +384,7 @@ function _completion_lists() {
 	# Remove existing lists and download new ones
 	curl -Ls "$APPSLISTDB" > "$AMDATADIR/$arch-apps"
 	awk -v FS="(◆ | : )" '{print $2}' <"$AMDATADIR"/"$arch"-apps > "$AMDATADIR"/list
+	[ -f "$AMDATADIR"/"$ARCH"-appbundle ] && awk '{print $2}' "$AMDATADIR"/"$ARCH"-appbundle >> "$AMDATADIR"/list
 	[ -f "$AMDATADIR"/"$ARCH"-toolpack ] && awk '{print $2}' "$AMDATADIR"/"$ARCH"-toolpack | sed -e 's/$/.toolpack/' >> "$AMDATADIR"/list
 	# Append options to the list
 	for o in $available_options; do
@@ -517,7 +522,7 @@ function _use_apikey() {
 	case $2 in
 	'del'|'delete'|'remove')
 		[ -f "$ghapikey_file" ] || { echo " ✖ No file named $ghapikey_file has been found"; exit 1; }
-		rm -f "$ghapikey_file" && echo " ✔ $ghapikey_file has been removed" 
+		rm -f "$ghapikey_file" && echo " ✔ $ghapikey_file has been removed"
 		exit 0
 	esac
 	if [[ "$2" =~ ^(gh[ps]_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59})$ ]]; then
@@ -720,15 +725,25 @@ function _sync_appimages_list() {
 	fi
 }
 
+function _sync_appbundle_list() {
+	rm -f "$AMDATADIR/$ARCH-appbundle"
+	curl -Ls "$appbundle_readme" | grep -v "\.appimage \|?" | grep "\.appbundle " | cut -d":" -f1 | cut -d"@" -f2 | sed 's/^| /◆ /g; s/ https$//g; s/ :$//g; s/ | / : /g; s/ |$/./g; s/\.\.$/./g;' | sort > "$AMDATADIR/$ARCH-appbundle"
+}
+
 function _sync_toolpacks_list() {
 	rm -f "$AMDATADIR/$ARCH-toolpack"
-	curl -Ls "$toolpack_readme" | grep -v "\.appimage \|?" | cut -d":" -f1 | cut -d"@" -f2 | sed 's/^| /◆ /g; s/ | https$/. To install it use the "--toolpack" flag./g; s/ | / : /g' > "$AMDATADIR/$ARCH-toolpack"
+	curl -Ls "$toolpack_readme" | grep -v "\.appimage \|.appbundle \|?" | cut -d":" -f1 | cut -d"@" -f2 | sed 's/^| /◆ /g; s/ | https$/. To install it use the "--toolpack" flag./g; s/ | / : /g' | sort > "$AMDATADIR/$ARCH-toolpack"
+}
+
+function _sync_third_party_lists() {
+	_sync_appbundle_list
+	_sync_toolpacks_list
 }
 
 function _sync_databases() {
 	echo -e "$DIVIDING_LINE\n Check and update offline lists of additional databases..."
 	_sync_appimages_list
-	_sync_toolpacks_list
+	_sync_third_party_lists
 	_completion_lists
 }
 
@@ -1060,7 +1075,7 @@ case "$1" in
 			DESCRIPTION: A command line utility to install and manage AppImages and other portable programs for GNU/Linux thanks to its AUR-inspired database.
 
 			OPTIONS:
-			 
+
 			${Gold}about, -a\033[0m
 
 					${LightBlue}$AMCLI -a {PROGRAM}\033[0m
